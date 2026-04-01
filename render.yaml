@@ -1,0 +1,27 @@
+services:
+  # Backend Service
+  - type: web
+    name: advanced-minigit-backend
+    env: docker
+    dockerfilePath: ./Dockerfile.backend
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 8080
+
+  # Frontend Service
+  - type: web
+    name: advanced-minigit-frontend
+    env: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/build
+    plan: free
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://advanced-minigit-backend.onrender.com
+
+databases:
+  - name: minigit-db
+    plan: free
